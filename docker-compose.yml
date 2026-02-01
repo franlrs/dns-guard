@@ -1,0 +1,67 @@
+services:
+  # === THE BOUNCER (Pi-hole) ===
+  # This service holds the blocklists for ads and trackers.
+  # It is the first point of contact for DNS queries.
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+
+    # --- PORTS (Host : Container) ---
+    ports:
+      # Port 53: The standard door for DNS. 
+      # Devices will always knock on this door.
+      - "53:53/tcp"
+      - "53:53/udp"
+      
+      # Web Port: Since port 80 might be in use, we map the admin panel to 8081.
+      # Access via: http://<IP>:8081/admin
+      - "8081:80"
+    
+    # --- CONFIGURATION ---
+    environment:
+      - TZ=Europe/Madrid
+      # SECURITY: We use a variable here to avoid hardcoding passwords in Git.
+      # The actual password sits in the hidden .env file.
+      - WEBPASSWORD=${WEBPASSWORD}
+    
+    # --- PERSISTENCE (Volumes) ---
+    # Data is stored on the host to survive container restarts.
+    volumes:
+      - './etc-pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    
+    restart: unless-stopped
+    
+    # Static IP assignment within the Docker network to ensure stability.
+    networks:
+      dns-net:
+        ipv4_address: 172.20.0.5
+
+  # === THE PRIVATE INVESTIGATOR (Unbound) ===
+  # If the domain is NOT an ad, Pi-hole forwards the request here.
+  # Unbound performs a recursive lookup directly to root servers (bypassing Google/ISP).
+  unbound:
+      container_name: unbound
+      # Note: Using a specific image optimized for Raspberry Pi (ARM64)
+      image: klutchell/unbound:latest
+      
+      # Mapping the custom configuration file.
+      volumes:
+        - './unbound/unbound.conf:/etc/unbound/unbound.conf'
+      
+      ports:
+        - "5335:5335/udp"
+      restart: unless-stopped
+      networks:
+        dns-net:
+          ipv4_address: 172.20.0.6
+
+# === PRIVATE ROAD (Network) ===
+# A bridge network connecting Pi-hole and Unbound directly.
+networks:
+  dns-net:
+    driver: bridge
+    ipam:
+      config:
+        # Defining a private subnet to control IP assignment.
+        - subnet: 172.20.0.0/16
