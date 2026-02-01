@@ -3,7 +3,7 @@
 Self-hosted Network-wide Ad Blocking and Local DNS resolver using **Docker Compose**. This project aims to provide privacy, speed, and cleaner browsing for all devices on the local network.
 
 <div align="center">
-  <img src="https://pi-hole.net/images/pihole-logo.svg" width="150" alt="Pi-hole Logo"/>
+  <img src="https://github.com/user-attachments/assets/19c0acc2-d830-402e-9bc2-6998cfe50397" width="150" alt="Pi-hole Logo"/>
   <br/>
   <em>"The Black Hole for Internet Advertisements"</em>
 </div>
@@ -70,6 +70,39 @@ This project was deployed in a university dormitory with a restricted ISP (**ASK
 
 ---
 
+## ⚙️ Client Configuration
+
+Since we cannot push DNS settings via the residence router, we configure the Network Interface manually on Windows to point to our Raspberry Pi.
+
+**Steps taken:**
+
+1. Access Network & Internet settings.
+2. Edit IP assignment for the Ethernet/Wi-Fi adapter.
+3. Set **Preferred DNS** to the static IP of the Raspberry Pi (`10.9.129.175`).
+
+<div align="center">
+    <img src="./assets/configuration.png" width="300" alt="Manual DNS Configuration on Windows 11"/>
+    <br/>
+    <em>"Manual DNS Configuration on Windows 11"</em>
+</div>
+
+---
+
+### 🔬 Network Verification (Proof of Life)
+
+To validate the configuration, we performed a packet capture analysis using **Wireshark**.
+
+**Evidence:**
+The capture below demonstrates a client sending standard DNS queries (e.g., for `www.bbc.com`) directly to the Pi-hole IP (`10.9.129.175`) instead of the default gateway. This confirms that traffic is correctly routed through our filtering container.
+
+<div align="center">
+    <img src="./assets/wireshark-proof.png" width="800" alt="Wireshark Capture showing DNS traffic flowing to Pi-hole"/>
+    <br/>
+    <em>"Wireshark Capture showing DNS traffic flowing to Pi-hole"</em>
+</div>
+
+---
+
 ### 🚀 Installation
 
 1. **Clone the repository:**
@@ -103,4 +136,3 @@ docker compose up -d
 ### 📄 License
 
 Project developed by **franlrs**. Distributed under the [MIT License](LICENSE).
-
