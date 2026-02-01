@@ -1,9 +1,12 @@
 # 🛡️ DNS Guard (Pi-hole + Unbound)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Raspberry Pi](https://img.shields.io/badge/-Raspberry_Pi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)
+![Pi-hole](https://img.shields.io/badge/Pi--hole-96060C?style=for-the-badge&logo=pi-hole&logoColor=white)
 
 Self-hosted Network-wide Ad Blocking and Local DNS resolver using **Docker Compose**. This project aims to provide privacy, speed, and cleaner browsing for all devices on the local network.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/19c0acc2-d830-402e-9bc2-6998cfe50397" width="150" alt="Pi-hole Logo"/>
+  <img src="https://github.com/user-attachments/assets/19c0acc2-d830-402e-9bc2-6998cfe50397" width="125" alt="Pi-hole Logo"/>
   <br/>
   <em>"The Black Hole for Internet Advertisements"</em>
 </div>
